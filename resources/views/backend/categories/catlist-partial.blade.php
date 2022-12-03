@@ -3,17 +3,27 @@
 @foreach ($catchild->childrenRecursive as $children)
               <tr class="sub-cat-tr">
               <td class="align-middle text-center">{{$children->id}}</td>
-             <td class="align-middle text-center">{{str_repeat("---",$level)}}    {{$children->title}}</td>
+
+             <td class="align-middle text-center">{{str_repeat("---",$level)}}<a href="{{route('categories.edit',$children->id)}}">{{$children->title}}</a></td>
              <td class="align-middle text-center">{{$children->slug}}</td>
                 <td class="align-middle text-center">{{$children->parent->title}}</td>
                 <td class="align-middle text-center"><img src="/images/cats/{{$children->photo}}" width="200px"></td>
 
+                <td class="align-middle text-center">
+                  <ul class="list-group ul-attr-index">
+                  @foreach($children->attributegroups as $attr)
+                  {{-- {{dd($attr)}} --}}
+                  <li class="list-group-item">{{$attr->title}}</li>
+
+                  @endforeach
+                  </ul>
+                </td>
           
              <td class="align-middle text-center">
                <a href="{{route('categories.edit',$children->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
                @if(count($children->childrenRecursive)>0)
            
-               <button type="button" class="btn btn-gray btn-sm disabled">غیر قابل حذف</button>
+               <button type="button" class="btn btn-gray btn-sm font11 disabled">غیر قابل حذف</button>
                @else
                <form class="d-inline" action="{{route('categories.destroy',$children->id)}}" method="post">
                 @csrf
@@ -92,6 +102,28 @@
 
 @endforeach
 
+
+
+@endif
+
+
+
+
+
+
+@if(isset($pr_edit))
+
+
+@foreach ($catchild->childrenRecursive as $children)
+
+            
+<option value="{{$children->id}}" @if($product->category->id == $children->id) selected @endif>{{str_repeat("---",$level)}} {{$children->title}}</option>
+            
+             @if (count($children->childrenRecursive)>0)
+               @include('backend.categories.catlist-partial',['catchild'=>$children,'level'=>$level+2,'pr_edit'=>'pr_edit'])  
+             @endif
+
+@endforeach
 
 
 @endif

@@ -102,6 +102,21 @@
                             <textarea rows="3" name="meta_desc" class="form-control" placeholder="توضیحات موضوع جهت نمایش در گوگل...">{{$cat->meta_description}}</textarea>
                             </div>
 
+
+                            
+                        <div class="form-group mt-4 mb-4">
+                          <label class="d-block">ویژگی های این کتگوری را ویرایش نمایید</label>
+             
+                          @foreach($attr_groups as $attr_gp)
+
+                            <div class="form-check d-inline">
+                              <input class="form-check-input" type="checkbox" name="attr-gps[]" value="{{$attr_gp->id}}" @if(in_array($attr_gp->id,$cat->attributegroups->pluck('id')->toArray())) checked @endif>
+                              <label class="form-check-label ml-3">{{$attr_gp->title}}</label>
+                            </div>
+                            @endforeach
+                        </div>
+
+
                             
                         <div class="form-group">
                             <label for="exampleFormControlFile1">تصویر شاخص</label>

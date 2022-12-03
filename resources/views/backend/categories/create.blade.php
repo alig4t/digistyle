@@ -101,8 +101,33 @@
                         </div>
   
 
-                        <div class="form-group">
-                          <label for="exampleFormControlFile1">تصویر شاخص</label>
+                        
+                        <div class="form-group mt-4 mb-4">
+                          <label class="d-block">ویژگی های این کتگوری را انتخاب نمایید</label>
+                          {{-- <button type="button" class="btn btn-default">تعریف ویژگی جدید</button> --}}
+
+
+                          @foreach($attr_groups as $attr_gp)
+
+                            <div class="form-check d-inline">
+                              <input class="form-check-input" type="checkbox" name="attr-gps[]" value="{{$attr_gp->id}}">
+                              <label class="form-check-label ml-3">{{$attr_gp->title}}</label>
+                            </div>
+                            @endforeach
+                        </div>
+
+
+
+
+                        
+
+
+
+
+
+
+                        <div class="form-group d-block">
+                          <label class="d-block" for="exampleFormControlFile1">تصویر شاخص</label>
                           <div class="input-group">
                           <input type="file" name="image" class="form-control-file" id="exampleFormControlFile1">
                           </div>
@@ -149,13 +174,4 @@
 
 
 
-@endsection
-
-@section('scripts')
-<script src="/dist/js/dropzone.min.js"></script>
-{{-- <script>
-var drop = new Dropzone('#shakhes',{
-
-}) --}}
-{{-- </script> --}}
 @endsection

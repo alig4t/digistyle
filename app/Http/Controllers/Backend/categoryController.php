@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\AttributeGroup;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,9 +20,11 @@ class categoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('childrenRecursive')
+        $categories = Category::with(['attributegroups','childrenRecursive'])
         ->where('parent_id',0)
         ->get();
+
+         
         return view('backend.categories.index',compact(['categories']));
     }
 
@@ -32,10 +35,11 @@ class categoryController extends Controller
      */
     public function create()
     {
+        $attr_groups = AttributeGroup::all();
         $categories = Category::with('childrenRecursive')
         ->where('parent_id',0)
         ->get();
-        return view('backend.categories.create',['categories'=>$categories]);
+        return view('backend.categories.create',['categories'=>$categories,'attr_groups'=>$attr_groups]);
     }
 
     /**
@@ -64,6 +68,10 @@ class categoryController extends Controller
  
         $new_cat->save();
         
+        $new_cat->attributegroups()->attach($request->input('attr-gps'));
+
+
+
         Session::flash('new_cat','دسته بندی جدید با موفقیت ایجاد شد');
         return redirect('admin/categories');
     }
@@ -87,16 +95,21 @@ class categoryController extends Controller
      */
     public function edit($id)
     {
-        // $id=1;
+        $attr_groups = AttributeGroup::all();
         $categories = Category::with(['childrenRecursive'=>function($q){
             
         }])->where('parent_id',0)
         ->get();
 
         // return ($categories[0]->childrenRecursive);
+        // $cat = Category::with('attributegroups')->whereId($id)->first();
 
         $cat = Category::findorfail($id);
-        return view('backend.categories.edit',compact(['cat','categories']));
+
+
+        // return $cat->attributegroups; 
+
+        return view('backend.categories.edit',compact(['cat','categories','attr_groups']));
     }
 
     /**
@@ -122,6 +135,7 @@ class categoryController extends Controller
         $cat->meta_description = $request->input('meta_desc');  
 
         $cat->save();
+        $cat->attributegroups()->sync($request->input('attr-gps'));
         
         Session::flash('edit_cat','دسته بندی  با موفقیت ویرایش شد');
         return redirect('admin/categories');
@@ -146,4 +160,26 @@ class categoryController extends Controller
         Session::flash('delete_cat','دسته بندی  با موفقیت حذف شد');
         return redirect('admin/categories');
     }
+
+    public function getCat($id){
+        
+        $cat = Category::where('id',$id)->first();
+        
+        $attr = Category::with(['attributegroups'=>function($q){
+            $q->with('attributeValues');
+        }])
+        ->where('id',$id)->first();
+
+        // $attr_gps = $cat->attributegroups->toArray();
+       
+        // $attr = AttributeGroup::with('attributeValues')
+        // ->where()
+       
+        return response()->json([
+            'attrs' => $attr 
+        ],200);
+
+    }
+
+
 }

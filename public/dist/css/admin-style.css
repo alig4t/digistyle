@@ -3,3 +3,30 @@
     /* background-color:#eeecec; */
     /* font-size: 14px; */
 } 
+.ul-attr-index{
+    font-size: 13px !important;
+}
+.ul-attr-index li{
+    padding: 4px !important;
+
+}
+.font11{
+    font-size: 11px !important;
+}
+.inline-input{
+    display: inline-block !important;
+    /* width: 40%; */
+}
+
+.photo-box{
+    position: relative;
+    display:inline-block;
+}
+.photo-box img{
+    display: block;
+}  
+
+.photo-box button{
+    font-size: 11px !important;
+    z-index: 5;
+}

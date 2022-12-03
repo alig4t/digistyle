@@ -76,7 +76,7 @@
                     <th class="align-middle text-center">آدرس سئو</th>
                     <th class="align-middle text-center">والد</th>
                     <th class="align-middle text-center">تصویر</th>
-                    {{-- <th class="align-middle text-center">توضیحات</th> --}}
+                    <th class="align-middle text-center">ویژگی ها</th>
                     <th class="align-middle text-center">عملیات</th>
 
                   </tr>
@@ -85,14 +85,26 @@
                     @foreach($categories as $category)
                     <tr class="bg-gray">
                     <td class="align-middle text-center">{{$category->id}}</td>
-                    <td class="align-middle text-center font-weight-bold">{{$category->title}}</td>
+                    <td class="align-middle text-center font-weight-bold"><a href="{{route('categories.edit',$category->id)}}">{{$category->title}}</a></td>
                     <td class="align-middle text-center">{{$category->slug}}</td>
                     <td class="align-middle text-center">دسته والد</td>
                     <td class="align-middle text-center"><img src="/images/cats/{{$category->photo}}" width="200px"></td>
+                   
+                    <td class="align-middle text-center">
+                      <ul class="list-group ul-attr-index">
+                      @foreach($category->attributegroups as $attr)
+                      {{-- {{dd($attr)}} --}}
+                      <li class="list-group-item">{{$attr->title}}</li>
+
+                      @endforeach
+                      </ul>
+                    </td>
+                   
+                   
                     <td class="align-middle text-center">
                       <a href="{{route('categories.edit',$category->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
                       @if(count($category->childrenRecursive)>0)
-                      <button type="button" class="btn btn-gray btn-sm disabled">غیر قابل حذف</button>
+                      <button type="button" class="btn btn-gray btn-sm disabled font11">غیر قابل حذف</button>
                       @else
                       <form class="d-inline" action="{{route('categories.destroy',$category->id)}}" method="post">
                         @csrf
@@ -104,8 +116,10 @@
                     </tr>
 
                     @if($category->childrenRecursive)
+                 
                       @include('backend.categories.catlist-partial',['catchild'=>$category,'level'=>1,'list'=>'list'])
-                    @endif
+                  
+                      @endif
 
 
                     @endforeach

@@ -18,4 +18,14 @@ class Category extends Model
         return $this->belongsTo(Category::class,'parent_id');
     }
 
+    public function attributegroups(){
+        return $this->belongsToMany(AttributeGroup::class,'attributegroup_category','category_id','attribute_id');
+    }
+
+    public function attgps(){
+        return $this->hasMany(AttributeGroup::class,'attributegroup_category','category_id','attribute_id');
+
+    }
+
+
 }
