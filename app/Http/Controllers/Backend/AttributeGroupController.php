@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Backend;
 use App\AttributeGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AttrGpRequest;
+use Attribute;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
-class AttributeGroupController extends Controller
+class AttributeGroupController extends AdminController
 {
     /**
      * Display a listing of the resource.
@@ -38,21 +40,24 @@ class AttributeGroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AttrGpRequest $request)
     {
-        $this->validate($request,[
-            'title' => 'required|unique:attributegroups',
-            'type'=>'required'
-        ],[
-            'title.required' => 'وارد کردن عنوان الزامی است',
-            'title.unique' => 'عنوان تکراری است',
-            'type.required' => 'وارد کردن نوع الزامی است'
-        ]);
+        $this->uploadImage();
+        // $this->validate($request,[
+        //     'title' => 'required|unique:attributegroups',
+        //     'type'=>'required'
+        // ],[
+        //     'title.required' => 'وارد کردن عنوان الزامی است',
+        //     'title.unique' => 'عنوان تکراری است',
+        //     'type.required' => 'وارد کردن نوع الزامی است'
+        // ]);
         // return $request->all();
         $new_attr_gp = new AttributeGroup();
-        $new_attr_gp->title = $request->input('title');
-        $new_attr_gp->type = $request->input('type');
-        $new_attr_gp->save();
+        // $new_attr_gp->title = $request->input('title');
+        // $new_attr_gp->type = $request->input('type');
+        // $new_attr_gp->save();
+
+        $new_attr_gp->create($request->input());
 
         Session::flash('new_attr_group','ویژگی جدید با موفقیت ثبت شد');
         return redirect('admin/attribute-groups');
@@ -89,16 +94,16 @@ class AttributeGroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AttrGpRequest $request, $id)
     {
-        $this->validate($request,[
-            'title' => ['required',Rule::unique('attributegroups')->ignore($request->attribute_group)],
-            'type'=>'required'
-        ],[
-            'title.required' => 'وارد کردن عنوان الزامی است',
-            'title.unique' => 'عنوان تکراری است',
-            'type.required' => 'وارد کردن نوع الزامی است'
-        ]);
+        // $this->validate($request,[
+        //     'title' => ['required',Rule::unique('attributegroups')->ignore($request->attribute_group)],
+        //     'type'=>'required'
+        // ],[
+        //     'title.required' => 'وارد کردن عنوان الزامی است',
+        //     'title.unique' => 'عنوان تکراری است',
+        //     'type.required' => 'وارد کردن نوع الزامی است'
+        // ]);
         // return $request->all();
         $new_attr_gp = AttributeGroup::findorfail($id);
         $new_attr_gp->title = $request->input('title');

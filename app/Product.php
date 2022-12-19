@@ -19,6 +19,15 @@ class Product extends Model
     public function category(){
         return $this->belongsTo(Category::class,'category_id');
     }
+
+    public function brand(){
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function stocks(){
+        return $this->hasMany(Stock::class);
+    }
+
     public function validSku($sku){
         return $this->where('sku',$sku)->exists();
     }
@@ -36,15 +45,20 @@ class Product extends Model
 
 
     public function getExtraAttribute($extra){
-        // dd($extra);
+        // dd(serialize([]));
         if($extra == null || $extra == ''){
-            $extra = [];
+            $extra = "a:0:{}";
         }
 
        return unserialize($extra);
         
     }
 
-
+    public function getDiscountAttribute($discount){
+        if($discount == null || $discount == ''){
+            $discount = 0;
+        }
+        return $discount;
+    }
 
 }

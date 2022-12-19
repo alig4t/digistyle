@@ -37,17 +37,10 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
         
-          <div class="col-10 mx-auto">
-            @if(count($errors)>0)
-            @foreach($errors->all() as $err)
-            <div class="alert alert-danger alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h6><i class="icon fa fa-ban"></i> {{$err}}</h6>
-            </div>
-            @endforeach
-            @endif
-          </div>
+          
+          @include('backend.layout.error')
             
+
 
             <div class="col-md-10 mx-auto">
                 <!-- general form elements -->

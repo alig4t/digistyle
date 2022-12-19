@@ -88,6 +88,17 @@
   
 
                       <div class="form-group mb-3">
+                        <label>برند</label>
+                        <select class="form-control" name="brand">
+                          <option value="">یک برند انتخاب نمایید</option>
+                          @foreach (\App\Brand::all() as $brand)
+                             <option value="{{$brand->id}}">{{$brand->name}}</option>
+                          @endforeach
+                      </select>
+                      </div>
+
+
+                      <div class="form-group mb-3">
                         <label>دسته بندی</label>
                         <select class="form-control" id="myselect" name="cat" onchange="myFunction()">
                           <option value="0">یک دسته بندی انتخاب نمایید</option>
@@ -122,12 +133,12 @@
                         <label class="d-block" id="attr-head"> تعریف ویژگی های متنی محصول (اختیاری)</label>
                         <label class="mt-3">عنوان و مقدار ویژگی متنی</label>
                         <input type="text" name="extra[0][title]" class="form-control" placeholder=" وارد کردن عنوان ...">
-                        <textarea type="text" name="extra[0][desc]" class="ckeditor form-control" placeholder="توضیح ویژگی را بنویسید..."></textarea>
+                        <textarea type="text" name="extra[0][desc]" class="form-control" placeholder="توضیح ویژگی را بنویسید..."></textarea>
                      
 
                         <label class="mt-3">عنوان و مقدار ویژگی متنی2</label>
                         <input type="text" name="extra[1][title]" class="form-control" placeholder="وارد کردن عنوان ...">
-                        <textarea type="text" name="extra[1][desc]" class="ckeditor form-control" placeholder="توضیح ویژگی را بنویسید..."></textarea>
+                        <textarea type="text" name="extra[1][desc]" class="form-control" placeholder="توضیح ویژگی را بنویسید..."></textarea>
                       </div>
                       <button type="button" onclick="insertInput()" id="add-button" class="btn btn-info btn-flat">اضافه کردن مقادیر بیشتر</button>
 
@@ -234,7 +245,7 @@
 
 <script src="/dist/js/dropzone.min.js"></script>
 {{-- <script src="/plugins/ckeditor/ckeditor.js"></script> --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/35.3.2/classic/ckeditor.js"></script>
+<script src="/dist/js/ckeditor.js"></script>
 <script>
 
 
@@ -268,7 +279,7 @@
     }
 
 
-Dropzone.autoDiscover = false;
+      Dropzone.autoDiscover = false;
         var photosGallery = []
         var galleryInputs = document.getElementById('gl-input');
         var drop = new Dropzone('#my-awesome-dropzone', {

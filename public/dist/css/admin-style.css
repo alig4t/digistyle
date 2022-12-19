@@ -1,4 +1,23 @@
- 
+
+
+.navbar{
+    background-color: #dc3545;
+    color: #fff !important;
+}
+.navbar a{
+    color: #fff !important;
+   
+}
+.brand-text{
+    text-align: center;
+    font-weight: bold;
+    color: #fff !important;
+}
+
+.nav-sidebar i{
+    font-size: 15px !important;
+}
+
 .sub-cat-tr{
     /* background-color:#eeecec; */
     /* font-size: 14px; */

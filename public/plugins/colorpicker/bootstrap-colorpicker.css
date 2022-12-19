@@ -9,7 +9,7 @@
  */
 
 .colorpicker-saturation {
-  float: left;
+  float: right;
   width: 100px;
   height: 100px;
   cursor: crosshair;

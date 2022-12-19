@@ -91,7 +91,16 @@
                           </div>
                       </div>
 
-  
+                      <div class="form-group mb-3">
+                        <label>برند</label>
+                        <select class="form-control" name="brand">
+                          <option value="">یک برند انتخاب نمایید</option>
+                          @php($selected_brand = $product->brand->id)
+                          @foreach (\App\Brand::all() as $brand)
+                             <option value="{{$brand->id}}" @if($brand->id == $selected_brand) selected @endif>{{$brand->name}}</option>
+                          @endforeach
+                      </select>
+                      </div>
 
                       <div class="form-group mb-3">
                         <label>دسته بندی</label>

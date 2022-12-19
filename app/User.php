@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'phone'
     ];
 
     /**
@@ -36,4 +36,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles(){
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($role){
+        if(is_string($role)){
+            return $this->roles->contains('name',$role);
+        }
+        return $this->roles;
+        return $role->intersect($this->roles)->count();
+    }
+
+    public function isAdmin(){
+        return $this->level=='admin' ? true : false;
+    }
+
 }

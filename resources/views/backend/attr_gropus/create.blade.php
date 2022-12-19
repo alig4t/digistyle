@@ -37,16 +37,9 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
         
-          <div class="col-10 mx-auto">
-            @if(count($errors)>0)
-            @foreach($errors->all() as $err)
-            <div class="alert alert-danger alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h6><i class="icon fa fa-ban"></i> {{$err}}</h6>
-            </div>
-            @endforeach
-            @endif
-          </div>
+          
+
+          @include('backend.layout.error')
             
 
             <div class="col-md-10 mx-auto">
@@ -59,16 +52,16 @@
                   </div>
                   <!-- /.card-header -->
                   <!-- form start -->
+                  
                   <form role="form" method="POST" action="{{route('attribute-groups.store')}}">
                     
                     <div class="card-body">
                         @csrf
+
                       <div class="form-group">
-                        
                         <label>عنوان</label>
-                        <input type="text" name="title" class="form-control" placeholder="وارد کردن عنوان ...">
+                        <input type="text" name="title" class="form-control" value="{{old('title')}}" placeholder="وارد کردن عنوان ...">
                       </div>
-  
 
                       <div class="form-group">
                         <label>مقدار ویژگی</label>

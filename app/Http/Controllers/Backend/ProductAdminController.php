@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Category;
 use App\Http\Requests\ProductCreateRequest;
 use App\Product;
+use App\Stock;
 // use axios;
 use Illuminate\Support\Facades\Session;
 
@@ -19,22 +20,45 @@ class ProductAdminController extends Controller
      */
     public function index()
     {
+
+        // $products = Product::list('title')->get();
+
         // $products = Product::with(['category'=>function($cat){
         //     $cat->with(['attributegroups'=>function($attr_gp){
-        //         $attr_gp->with('attributeValues');
-        //         // ->where('products.id','product_id');
+        //         $attr_gp->with(['attributeValues'=>function($q){
+        //             $q->whereIn('id',$this->AttributeValues);
+        //         }]);
         //     }]);
         // }])->orderby('id','desc')->get();
 
+        // return $products;
+
+        $products = Product::with(['category', 'photos','AttributeValues.attr_groups','stocks.color','stocks.size'])
+        ->orderBy('id', 'desc')->paginate(10);
+
+        // return $products;
 
 
-        $products = Product::with(['category', 'photos', 'AttributeValues' => function ($q) {
-            $q->with('attr_groups');
-        }])
-            ->orderBy('id', 'desc')->paginate(10);
+        // $array_gp = [];
+
+        // foreach($products as $product){
+        //     array_push($array_gp,$product->id);
+        
+        
+        // }
 
 
+        // foreach ($products[0]->AttributeValues as $att_val) {
+        //     $gp = $att_val->attr_groups->title;
+        //     $val = $att_val->title;
+        //     if (array_key_exists($gp , $array_gp)) {
+        //         array_push($array_gp[$gp], $val);
+        //     } else {
+        //         $array_gp[$gp] = [$val];
+        //     }
+        // }
 
+        // return $array_gp;
 
         // return $products;
 
@@ -63,8 +87,8 @@ class ProductAdminController extends Controller
     public function store(ProductCreateRequest $request)
     {
 
-        return $request->input('extra');
-      
+        return $request->all();
+
 
         $newProduct = new Product();
 
@@ -72,6 +96,8 @@ class ProductAdminController extends Controller
 
         $newProduct->title = $request->input('title');
         $newProduct->slug = $request->input('slug');
+        $newProduct->brand_id = $request->input('brand');
+
         $newProduct->description = $request->input('description');
         $newProduct->extra = serialize($request->input('extra'));
 
@@ -112,16 +138,16 @@ class ProductAdminController extends Controller
             ->whereId($id)
             ->first();
 
-            // if($product->extra == null){
-            //     $extra = [];
-            // }else{
-            //     $extra = unserialize($product->extra);
-            // }
+        // if($product->extra == null){
+        //     $extra = [];
+        // }else{
+        //     $extra = unserialize($product->extra);
+        // }
         // dd($product);
 
         // return array_values($extra);
         // return serialize([]);
-        
+
         $categories = Category::with('childrenRecursive')
             ->where('parent_id', 0)
             ->get();
@@ -142,7 +168,7 @@ class ProductAdminController extends Controller
 
         // return serialize($request->input('extra'));
         $extra_array = array_filter($request->input('extra'), function ($row) {
-            if ($row['title'] != null && $row['title']!='') {
+            if ($row['title'] != null && $row['title'] != '') {
                 return true;
             }
         });
@@ -155,6 +181,8 @@ class ProductAdminController extends Controller
 
         $product->title = $request->input('title');
         $product->slug = $request->input('slug');
+        $product->brand_id = $request->input('brand');
+
         $product->description = $request->input('description');
         $product->extra = serialize($extra_array);
 
@@ -182,4 +210,6 @@ class ProductAdminController extends Controller
     {
         //
     }
+
+   
 }

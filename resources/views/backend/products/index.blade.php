@@ -73,12 +73,14 @@
                   <tbody>
                     <tr>
                     <th class="align-middle text-center">کدکالا</th>
-                    <th class="align-middle text-center">نام</th>
+                    <th class="align-middle text-center" width="150px">نام و آدرس سئو</th>
                     <th class="align-middle text-center">تصویر</th>
                     <th class="align-middle text-center">دسته بندی</th>
-                    <th class="align-middle text-center">ویژگی ها</th>
-                    <th class="align-middle text-center">آدرس سئو</th>
-                    <th class="align-middle text-center" style="width: 150px">عملیات</th>
+                    <th class="align-middle text-center" width="200px">ویژگی ها</th>
+                    {{-- <th class="align-middle text-center">آدرس سئو</th> --}}
+                    <th class="align-middle text-center" width="200px">موجودی</th>
+
+                    <th class="align-middle text-center">عملیات</th>
 
                   </tr>
                   
@@ -86,20 +88,41 @@
                     @foreach($products as $product)
                     <tr class="">
                     <td class="align-middle text-center">{{$product->sku}}</td>
-                    <td class="align-middle text-center font-weight-bold"><a href="{{route('products.edit',$product->id)}}">{{$product->title}}</a></td>
+                    <td class="align-middle text-center font-weight-bold"><a href="{{route('product.show',$product->slug)}}">{{$product->title}}</a></td>
                     <td class="align-middle text-center">
                       {{-- @foreach($product->photos as $photo) --}}
                         <img src="/images/products/{{$product->photos[0]->path}}" width="150px" class="d-inline">
                       {{-- @endforeach --}}
                     </td>
                     <td class="align-middle text-center">{{$product->category->title}}</td>
-                    <td class="align-middle text-center" style="width: 200px">   
+                    <td class="align-middle text-center">   
                       <ul class="list-group ul-attr-index">
+
+
+
+
+
+                          @php($array_gp = [])
+
                           @foreach($product->AttributeValues as $att_val)
+                          @php($gp = $att_val->attr_groups->title)
+                          @php($val = $att_val->title)
+
+                          @if(array_key_exists($gp , $array_gp))
+                            @php(array_push($array_gp[$gp], $val))
+                          @else
+                          @php($array_gp[$gp] = [$val])          
+                          @endif
+                          @endforeach
+
+
+                            @foreach($array_gp as $key=>$val)
+
                           <li class="list-group-item">
-                            {{$att_val->attr_groups->title}}
+                            {{$key}}
                             :
-                            {{$att_val->title}}
+                            @php($val = implode(" - ",$val))
+                            {{$val}}
                           </li>
 
                           @endforeach
@@ -108,20 +131,64 @@
 
 
 
-                    <td class="align-middle text-center">{{$product->slug}}</td>
-
+                    {{-- <td class="align-middle text-center">{{$product->slug}}</td> --}}
 
 
                     <td class="align-middle text-center">
-                      <a href="{{route('products.edit',$product->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
-                     
-                      <form class="d-inline" action="{{route('products.destroy',$product->id)}}" method="post">
-                        @csrf
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" class="btn btn-danger btn-sm" value="حذف">
-                      </form>
+                      @php($tedad = 0)
+                      @if(count($product->stocks)>0)
+                      <ul class="list-group ul-attr-index">
+                      @foreach($product->stocks as $stock)
+                      <li class="list-group-item">
                       
+                      @php($tedad += $stock->count)
+                      <span class="d-block">
+                        سایز: 
+                     {{$stock->size->size}}
+                      </span>
+                      <span class="d-block">
+                        رنگ: 
+                        {{$stock->color->color}}
+                      </span>
+
+                        <span class="d-block" style="color:red">
+                          تعداد: 
+                          {{$stock->count}}
+                          عدد
+                        </span>
+                     
+
+                      </li>
+
+                      @endforeach
+                      <li class="list-group-item" style="padding: 0 !important">
+                        <span class="d-block font-weight" style="background-color:rgb(104, 221, 145);padding: 7px 2px;">
+                          مجموع کل:
+                          {{$tedad}}
+                          عدد
+                        </span>
+                       
+                      </li>
+                      </ul>
+                      @endif
+                    
                     </td>
+
+
+                    <td class="align-middle text-center">
+                      <a href="{{route('stock.add',$product->id)}}" class="btn btn-warning btn-sm mb-4">افزودن موجودی</a>
+                      <div class="btn-group">
+
+                        <a href="{{route('products.edit',$product->id)}}" class="btn btn-info btn-sm">ویرایش</a>    
+                        <form class="d-inline" action="{{route('products.destroy',$product->id)}}" method="post">
+                          @csrf
+                          <input type="hidden" name="_method" value="DELETE">
+                          <input type="submit" class="btn btn-danger btn-sm" value="حذف">
+                        </form>
+                      </div>   
+                    </td>
+
+
 
                     </tr>
 
