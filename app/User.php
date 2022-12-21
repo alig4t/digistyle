@@ -45,11 +45,20 @@ class User extends Authenticatable
         if(is_string($role)){
             return $this->roles->contains('name',$role);
         }
-        return $this->roles;
+        // return $this->roles;
         return $role->intersect($this->roles)->count();
     }
 
     public function isAdmin(){
+        // dd($this->hasRole('فروشنده'));
+        // $is_manager = $this->hasRole('manager');
+        // dd($is_manager);
+        // return ($this->level=='admin' ? true : false) && ($this->hasRole('manager'));
+        return count($this->roles)>0 ? true : false; 
+        // return false;
+    }
+
+    public function isManager(){
         return $this->level=='admin' ? true : false;
     }
 

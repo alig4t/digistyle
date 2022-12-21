@@ -164,7 +164,7 @@ class AttributeValueController extends Controller
         $attr_val = AttributeValue::findorfail($id);
         $attr_val->delete();
         
-        Session::flash('new_attr_delete','مقدار ویژگی با موفقیت حذف شد');
+        Session::flash('delete_attr_value','مقدار ویژگی با موفقیت حذف شد');
         return redirect('admin/attribute-values');
     }
 }

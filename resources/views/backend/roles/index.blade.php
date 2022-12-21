@@ -78,7 +78,9 @@
                     <th class="align-middle text-center">عنوان</th>
                     <th class="align-middle text-center">کارکرد</th>
                     <th class="align-middle text-center">دسترسی ها</th>
+                    <th class="align-middle text-center">نام مدیران</th>
                     <th class="align-middle text-center">عملیات</th>
+
                   </tr>
                   
 {{-- {{dd($brand->logo)}} --}}
@@ -98,16 +100,33 @@
 
 
                     <td class="align-middle text-center">
-                      <a href="{{route('roles.edit',$role->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
-                      <form class="d-inline" action="{{route('roles.destroy',$role->id)}}" method="post">
-                        @csrf
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" class="btn btn-warning btn-sm" value="حذف">
-                      </form>
+                                        
+                        @if(count($role->users)>0)
+                        <span class="badge badge-warning">
+                          {{$role->users[0]->name}}
+                          <br>
+                          {{$role->users[0]->email}}
+                        </span>
+                        @endif
+                      </td>
+
+                    <td class="align-middle text-center">
+                      <div class="btn-group">
+                        <a href="{{route('roles.edit',$role->id)}}" class="btn btn-info btn-sm">ویرایش</a>
+                        <form class="d-inline" action="{{route('roles.destroy',$role->id)}}" method="post">
+                          @csrf
+                          <input type="hidden" name="_method" value="DELETE">
+                          <input type="submit" class="btn btn-danger btn-sm" value="حذف">
+                        </form>
+                      </div>
+                     
                     </td>
-
+                    
                     </tr>
+                    
 
+                      
+                 
                     @endforeach
 
 

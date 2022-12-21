@@ -15,7 +15,16 @@ class CheckAdminUser
      */
     public function handle($request, Closure $next)
     {
-        //  dd($request);
+        //  dd($request->method());
+
+        // dd(Auth()->user()->isManager());
+
+        if($request->method() == 'DELETE' || $request->method() == 'PATCH'){
+            if(! Auth()->user()->isManager()){
+               abort(403);
+            }
+         }
+         
         if(auth()->check()){
             if(auth()->user()->isAdmin()){
                 return $next($request);
@@ -23,5 +32,6 @@ class CheckAdminUser
             return redirect('/');
         }
          
+        
     }
 }

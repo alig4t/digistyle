@@ -53,7 +53,6 @@ Route::group(['middleware' => ['auth:web','CheckAdminUser']], function () {
         Route::resource('/attribute-values', 'backend\AttributeValueController');
         Route::resource('/sizes', 'SizeController');
         Route::resource('/colors', 'ColorController');
-
         Route::get('attribute-values/add/{id}', 'backend\AttributeValueController@addVal_create')->name('addAttrVal.create');
         Route::post('attribute-values/add', 'backend\AttributeValueController@addVal_insert')->name('addAttrVal.insert');
 

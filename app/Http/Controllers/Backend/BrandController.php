@@ -42,6 +42,7 @@ class BrandController extends AdminController
      */
     public function store(BrandRequest $request)
     {
+        // $this->authorize('OnlyAdminCan');
         $new_brand = new Brand();
         if ($request->file('image')) {
             $new_brand->logo = $this->uploadImage($request->file('image'), $request->input('slug'),[[200,110],[120,null]]);
@@ -110,7 +111,7 @@ class BrandController extends AdminController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($request,$id)
     {
         $brand = Brand::findorfail($id);
 

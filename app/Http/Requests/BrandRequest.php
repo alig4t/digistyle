@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class BrandRequest extends FormRequest
@@ -14,7 +15,21 @@ class BrandRequest extends FormRequest
      */
     public function authorize()
     {
+        // return $this->authorize('OnlyAdminCan');
+        // if(Auth()->user()->isAdmin)
+        // return false;
+        // if(auth()->check()){
+        //     if(auth()->user()->isAdmin()){
+        //         return $next($request);
+        //     }
+        //     return redirect('/');
+        // }
+        // if(Auth()->user()->isManager()){
+        //     return true;
+        // }
+        // return false;
         return true;
+        
     }
 
     /**
