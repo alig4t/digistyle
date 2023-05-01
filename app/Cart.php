@@ -5,58 +5,74 @@ namespace App;
 class Cart
 {
     public $items = null;
-    public $totalQty = 0;
+    public $stock_ids = [];
     public $totalPrice = 0;
-    public $finalPrice = 0;
     public $totalDiscount = 0;
+    public $finalPrice = 0;
+    public $totalQty = 0;
 
-    public function __construct($oldcart)
+    public $cart = [
+        "totalPrice" => 0,
+        "totalDiscount" => 0,
+        "finalPrice" => 0,
+        "totalQty" => 0,
+        "items" => [],
+    ];
+
+
+    public function __construct($oldCart)
     {
-        if ($oldcart) {
-            $this->items = $oldcart->items;
-            $this->totalQty = $oldcart->totalQty;
-            $this->totalPrice = $oldcart->totalPrice;
-            $this->finalPrice = $oldcart->finalPrice;
-            $this->totalDiscount = $oldcart->totalDiscount;
-        }
-    }
-
-    public function add($item, $pid)
-    { 
-        $storedItem = [
-            'qty' => 0,
-            'price' => $item->price ,
-            'discount' => $item->discount,
-            'item' => $item
-        ];
-        if ($this->items) {
-            if (array_key_exists($pid, $this->items)) {
-                $storedItem = $this->items[$pid];
+        
+        if($oldCart){
+            $this->items = $oldCart->items;
+            foreach($oldCart->items as $key=>$row){
+                array_push($this->stock_ids,$key);
             }
         }
-        $storedItem['qty'] += 1;
-        $storedItem['price'] = $item->price;
-        $storedItem['discount'] = $item->discount;
-        $this->items[$pid] = $storedItem;
-        // $this->totalQty +=1;
-        // $this->totalPrice += $storedItem['price'];
-        // $this->totalDiscount += $storedItem['discount'];
-        // $this->finalPrice += ($storedItem['price'] - $storedItem['discount']) * $storedItem['qty'];
-        $this->save_cart();
+
     }
 
+
+    public function add($stock, $count)
+    { 
+        
+        $storedItem = [
+            'qty' => 0,  
+            'item' => $stock,
+        ];
+
+        if ($this->items) {
+            if (array_key_exists($stock->id, $this->items)) {
+                $storedItem = $this->items[$stock->id];
+            }
+        }
+        $storedItem['qty'] += $count;
+        $this->items[$stock->id] = $storedItem;
+        array_push($this->stock_ids,$stock->id);
+        return $this->save_cart();
+    }
+
+
+
     public function save_cart(){
-        $this->totalPrice = 0;
-        $this->totalDiscount = 0;
-        $this->totalQty = 0;
-        $this->finalPrice = 0;
-        foreach($this->items as $item){
-            $this->totalPrice += $item['item']->price * $item['qty'];
-            $this->totalDiscount += $item['item']->discount * $item['qty'];
-            $this->totalQty += $item['qty'];
+
+        $stocks = Stock::with(['product'=>function($q){
+            $q->with('photos');
+        },'size','color'])->whereIn('id',$this->stock_ids)->get();
+        foreach($stocks as $row){
+            $this->totalPrice += $row->product->price * $this->items[$row->id]['qty'];
+            $this->totalDiscount += $row->product->discount * $this->items[$row->id]['qty'];
+            $this->totalQty += $this->items[$row->id]['qty'];
+            $storeItem = [
+                "qty" => $this->items[$row->id]['qty'],
+                "item" => $row
+            ];
+            array_push($this->cart["items"],$storeItem); 
         }
         $this->finalPrice = $this->totalPrice - $this->totalDiscount;
+
     }
+
 
     public function removeItem($pid){
         if ($this->items) {

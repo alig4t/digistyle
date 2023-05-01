@@ -9,6 +9,14 @@
       .p-0{
         padding:5px;
       }
+
+      .circle-color{
+        width: 15px;
+        height: 15px;
+        border: 1px solid #eeeeee;
+        border-radius: 100%;
+        display: inline-block;
+      }
       </style>
 @endsection
 
@@ -64,12 +72,13 @@
   <div id="tab-latest" class="tab_content">
       <div class="owl-carousel product_carousel_tab">
 
+        
 
         @foreach ($products as $item)
         <div class="product-thumb clearfix">
-            <div class="image"><a href="{{route('product.show',$item->slug)}}"><img src="/images/products/{{$item->photos[0]->path}}" alt="تی شرت کتان مردانه" title="تی شرت کتان مردانه" class="img-responsive" /></a></div>
+            <div class="image"><a href="{{$item->path()}}"><img src="/images/products/{{$item->photos[0]->path}}" alt="تی شرت کتان مردانه" title="تی شرت کتان مردانه" class="img-responsive" /></a></div>
             <div class="caption">
-              <h4><a href="product.html">{{$item->title}}</a></h4>
+              <h4><a href="{{$item->path()}}">{{$item->title}}</a></h4>
              
              
               @if($item->discount > 0)
@@ -78,6 +87,12 @@
               @else 
               <p class="price"> {{$item->price}} تومان </p>
               @endif
+
+              @foreach($item->stocks as $stock)
+
+              <div class="circle-color" style="background-color:{{$stock->color->hex}}" title="{{$stock->color->color}}"></div>
+
+              @endforeach
             </div>
             <div class="button-group">
               <button class="btn-primary" type="button" onClick="addtoCart({{$item->id}})"><span>افزودن به سبد</span></button>
@@ -363,17 +378,14 @@
 
         card_td_1_a.appendChild(card_img);
         card_td_1.appendChild(card_td_1_a);
-        
-        card_td_2.appendChild(card_td_2_a)
 
+        card_td_2.appendChild(card_td_2_a)
         card_tr.appendChild(card_td_1);
         card_tr.appendChild(card_td_2)
         card_tr.appendChild(card_td_3)
         card_tr.appendChild(card_td_4)
         card_tr.appendChild(card_td_5)
-
         basketBody.append(card_tr);
-
       });
 
 

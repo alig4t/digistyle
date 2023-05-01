@@ -11,31 +11,21 @@ use App\Product;
 class IndexController extends Controller
 {
     public function index(){
-        $products = Product::with('photos')
+
+
+        $products = Product::with('photos','stocks.color','stocks.size')
+        ->whereHas('stocks')
         ->orderby('id','desc')
-        ->limit(7)
+        ->limit(7)        
         ->get();
 
+        // return $products;
+
+        $brands = Brand::HomePageBrands();
+
+        $category_product = Product::ProductCategoryAll();
        
-         $cats = Category::with(['childrenRecursive'])
-        ->where('parent_id',0)
-        ->get();
-
-
-        $category_ids = [6,21,22];
-        foreach($category_ids as $key=>$cid){
-            $category_product[$key] = Product::with('photos')
-            ->where('category_id',$cid)
-            ->orderby('id','desc')
-            ->limit(5)
-            ->get();
-        }
-
-        $brands = Brand::orderby('id','desc')->limit(12)->get();
-        // return $brands;
-        // return $category_product;
-
-
-        return view('frontend.index',compact(['products','cats','category_product','brands']));
+        return view('frontend.index',compact(['products','category_product','brands']));
     }
+    
 }

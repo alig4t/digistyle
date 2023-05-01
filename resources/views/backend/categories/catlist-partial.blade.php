@@ -20,18 +20,24 @@
                 </td>
           
              <td class="align-middle text-center">
-               <a href="{{route('categories.edit',$children->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
+              <div class="btn-group">
+               <a href="{{route('categories.edit',$children->id)}}" class="btn btn-info btn-sm">ویرایش</a>
                @if(count($children->childrenRecursive)>0)
            
                <button type="button" class="btn btn-gray btn-sm font11 disabled">غیر قابل حذف</button>
+              </div>
                @else
                <form class="d-inline" action="{{route('categories.destroy',$children->id)}}" method="post">
                 @csrf
                 <input type="hidden" name="_method" value="DELETE">
-                <input type="submit" class="btn btn-warning btn-sm" value="حذف">
-              </form>             
+                <input type="submit" class="btn btn-danger btn-sm" value="حذف">
+              </form>  
+            </div>           
                 @endif
              </td>
+
+            
+
 
 
 

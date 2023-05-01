@@ -12,6 +12,10 @@ class dashboardController extends Controller
 {
     public function index(){
         
+
+        
+        // return $chart;
+
         // return bcrypt('123456');
         // auth()->loginUsingId(1);
 
@@ -43,7 +47,22 @@ class dashboardController extends Controller
         //     'label' => 'ویرایش محصولات'
         // ]);
         
+        // $month = $chart['LastMonths'];
         
-        return view('backend.dashboard');
+        // $month = [
+        //     "دی",
+        //     'بهمن',
+        // ];
+
+        // $month = implode(",", $month);
+
+        // return $chart;
+        
+        
+
+
+        $chart = app('\App\Http\Controllers\Backend\PaymentController')->chartMonths();
+
+        return view('backend.dashboard',compact(['chart']));
     }
 }

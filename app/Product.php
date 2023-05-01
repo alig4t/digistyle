@@ -2,11 +2,48 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    
+
+    public function scopeMultiFilterAttr($query,$attr){
+        for($i=0 ; $i<count($attr) ; $i++){
+            $query->FilterAttr($attr[$i]);
+        }
+    }
+
+    public function scopeFilterAttr($query,$filter){
+        $query->whereHas('attributeValues', function ($q) use ($filter) {
+            $q->where('attributevalue_id' , $filter);
+        });
+    }
+
+
+    public function scopeProductCategoryAll(){
+         
+        $category_ids = [6,21,22];
+        if(cache()->has('ProductCatHome')){
+            $category_product = cache('ProductCatHome');
+        }else{
+            foreach($category_ids as $key=>$cid){
+                $category_product[$key] = $this->ProductCategory($cid);
+            }
+            cache(['ProductCatHome' => $category_product] , Carbon::now()->addMinutes(60));
+        }
+        return $category_product;
+    }
+
+    public function ProductCategory($cid){
+            return Product::with('photos')
+            ->where('category_id',$cid)
+            ->latest()
+            ->take(5)
+            ->get();
+    }
+
+
 
     public function AttributeValues(){
         return $this->belongsToMany(AttributeValue::class,'attributevalue_product','product_id','attributevalue_id');
@@ -59,6 +96,10 @@ class Product extends Model
             $discount = 0;
         }
         return $discount;
+    }
+
+    public function path(){
+        return "/" . "product/".$this->slug;
     }
 
 }

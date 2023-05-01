@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -52,7 +53,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-            'phone' =>['nullable','numeric','min:11']
+            'phone' =>['nullable','numeric','min:11'],
         ]);
     }
 
@@ -70,7 +71,7 @@ class RegisterController extends Controller
             'phone' => $data['phone'],
             'level' => 'user',
             'email' => $data['email'],
-
+            'api_token' => Str::random(60),
             'password' => Hash::make($data['password']),
         ]);
     }

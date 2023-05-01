@@ -34,7 +34,7 @@ class ProductAdminController extends Controller
         // return $products;
 
         $products = Product::with(['category', 'photos','AttributeValues.attr_groups','stocks.color','stocks.size'])
-        ->orderBy('id', 'desc')->paginate(10);
+        ->orderBy('id', 'desc')->paginate(50);
 
         // return $products;
 

@@ -137,6 +137,8 @@
         </div>
       </div>
     </nav>
+    {{-- {{dd(Session::get('cart')->items)}} --}}
+
     <!-- Top Bar End-->
     <!-- Header Start-->
     <header class="header-row">
@@ -163,21 +165,27 @@
               </span></button>
 
 
+                {{-- {{dd(Session::get('cart')->items[4]->product->slug)}} --}}
               <ul class="dropdown-menu">
                 <li>
                   <table class="table" id="basket-tbl">
                     <tbody>
 
+                     
                       @if(Session::has('cart'))
                      
-                      @foreach(Session::get('cart')->items as $row)
+                      @foreach(Session::get('cart')->items as $key=>$row)
                       <tr>
+
+                        {{-- {{dd($row['item'])}} --}}
                         
-                        <td class="text-center"><a href="product.html"><img class="img-thumbnail" width="85px" src="/images/products/{{$row['item']->photos[0]->path}}"></a></td>
-                        <td class="text-left"><a href="product.html">{{$row['item']['title']}}</a></td>
+                        <td class="text-center"><a href=""><img class="img-thumbnail" width="85px" src="/images/products/{{$row['item']->product->photos[0]->path}}"></a></td>
+                        <td class="text-left"><a href="product.html">{{$row['item']->product->title}}</a>
+                          <span>{{$row['item']->size->size}} - {{$row['item']->color->color}}</span>
+                        </td>
                         <td class="text-right">x {{$row['qty']}}</td>
-                        <td class="text-right">{{$row['price'] - $row['discount']}} تومان</td>
-                        <td class="text-center"><a href="/remove-cart/{{$row['item']['id']}}" class="btn btn-danger btn-xs remove" title="حذف" type="button"><i class="fa fa-times"></i></a></button></td>
+                        <td class="text-right">{{$row['item']->product->price - $row['item']->product->discount}} تومان</td>
+                        <td class="text-center"><a href="/remove-cart/{{$row['item']->id}}" class="btn btn-danger btn-xs remove" title="حذف" type="button"><i class="fa fa-times"></i></a></button></td>
                       </tr>
                       @endforeach
                       
@@ -223,8 +231,10 @@
           <!-- جستجو Start-->
           <div class="col-table-cell col-lg-3 col-md-3 col-sm-6 col-xs-12 inner">
             <div id="search" class="input-group">
-              <input id="filter_name" type="text" name="search" value="" placeholder="جستجو" class="form-control input-lg" />
-              <button type="button" class="button-search"><i class="fa fa-search"></i></button>
+              <form method="GET" action="{{route('product.search')}}">
+              <input id="filter_name" type="text" name="q" value="" placeholder="جستجو" class="form-control input-lg" />
+              <button type="submit" class="button-search"><i class="fa fa-search"></i></button>
+              </form>
             </div>
           </div>
           <!-- جستجو End-->
@@ -240,7 +250,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
             <li><a class="home_link" title="خانه" href="{{url('/')}}">خانه</a></li>
-            @foreach(\App\Category::where('parent_id',0)->get() as $cat)
+            @foreach($HeaderMenuCats as $cat)
 
 
               <li class="dropdown"><a href="{{route('cat.show',$cat->slug)}}">{{$cat->title}}</a>
@@ -288,7 +298,7 @@
                 <li class="menu_brands dropdown"><a href="#">برند ها</a>
               <div class="dropdown-menu">
 
-                @foreach(\App\Brand::limit(12)->get() as $brand)
+                @foreach($brands as $brand)
 
                 <div class="col-lg-1 col-md-2 col-sm-3 col-xs-6">
                   <a href="{{route('brand.show',$brand->slug)}}">

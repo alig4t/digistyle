@@ -10,12 +10,14 @@
                 <div class="card-body">
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
-                            {{ __('A fresh verification link has been sent to your email address.') }}
+                            {{ __('یک ایمیل جدید برای شما ارسال شد. جهت فعالسازی روی لینک کلیک نمایید') }}
                         </div>
                     @endif
 
-                    {{ __('Before proceeding, please check your email for a verification link.') }}
-                    {{ __('If you did not receive the email') }}, <a href="{{ route('verification.resend') }}">{{ __('click here to request another') }}</a>.
+                    {{-- {{ __('Before proceeding, please check your email for a verification link.') }} --}}
+                    {{ __('قبل از ادامه کار لازم است ایمیل خود را فعال نمایید. صندوق ورودی ایمیل خود را بررسی نمایید.') }}
+
+                    {{ __('اگر ایمیلی دریافت نکرده اید') }}, <a href="{{ route('verification.resend') }}">{{ __('برای درخواست مجدد ایمیل فعال سازی کلیک نمایید') }}</a>.
                 </div>
             </div>
         </div>

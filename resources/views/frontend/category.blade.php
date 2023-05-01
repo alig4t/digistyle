@@ -73,14 +73,20 @@
               
             </select> --}}
 
+            {{-- {{dd($params)}} --}}
 
+            
             <div class="form-group mb-3 inline-block">
               <label class="d-block font-weight-bold ml-4"> {{$attrGp->title}}: </label>
               @foreach($attrGp->attributeValues as $attrVal)
               @php($i++)
           @php($grName = 'attribute'.$i)
               <div class="form-check d-inline">
-                <input type="checkbox" @if(in_array($attrVal->id,request()->query())) checked @endif data-href="{{request()->fullUrlWithQuery([$grName => $attrVal->id,'page'=>1])}}" name="attr[]" value="{{$attrVal->id}}" onclick="attrFilter(this,{{$attrVal->id}})" class="form-check-input">
+                {{-- <input type="checkbox" @if(in_array($attrVal->id,request()->query())) checked @endif data-href="{{request()->fullUrlWithQuery([$attrGp->slug => $attrVal->id,'page'=>1])}}" name="attr[]" value="{{$attrVal->id}}" onclick="attrFilter(this,{{$attrVal->id}})" class="form-check-input"> --}}
+              
+                {{-- {{dd($params[$attrGp->slug])}} --}}
+                <input type="checkbox" @if(in_array($attrVal->id,$params['attributes_checked'])) checked @endif data-group="{{$attrGp->slug}}" name="attr[]" value="{{$attrVal->id}}" onclick="attrFilter(this,{{$attrVal->id}})" class="form-check-input">
+              
                 <label class="form-check-label ml-2">{{$attrVal->title}}</label>
               </div>
               @endforeach
@@ -152,7 +158,7 @@
           <h3 class="subtitle">پرفروش ها</h3>
           <div class="side-item">
             <div class="product-thumb clearfix">
-              <div class="image"><a href="product.html"><img src="image/product/apple_cinema_30-50x75.jpg" alt="تی شرت کتان مردانه" title="تی شرت کتان مردانه" class="img-responsive" /></a></div>
+              {{-- <div class="image"><a href="product.html"><img src="image/product/apple_cinema_30-50x75.jpg" alt="تی شرت کتان مردانه" title="تی شرت کتان مردانه" class="img-responsive" /></a></div> --}}
               <div class="caption">
                 <h4><a href="product.html">تی شرت کتان مردانه</a></h4>
                 <p class="price"><span class="price-new">110000 تومان</span> <span class="price-old">122000 تومان</span> <span class="saving">-10%</span></p>
@@ -165,7 +171,7 @@
           <h3 class="subtitle">ویژه</h3>
           <div class="side-item">
             <div class="product-thumb clearfix">
-              <div class="image"><a href="product.html"><img src="image/product/macbook_pro_1-50x75.jpg" alt=" کتاب آموزش باغبانی " title=" کتاب آموزش باغبانی " class="img-responsive" /></a></div>
+              {{-- <div class="image"><a href="product.html"><img src="image/product/macbook_pro_1-50x75.jpg" alt=" کتاب آموزش باغبانی " title=" کتاب آموزش باغبانی " class="img-responsive" /></a></div> --}}
               <div class="caption">
                 <h4><a href="product.html">کتاب آموزش باغبانی</a></h4>
                 <p class="price"> <span class="price-new">98000 تومان</span> <span class="price-old">120000 تومان</span> <span class="saving">-26%</span> </p>
@@ -175,8 +181,8 @@
           
           </div>
           <div class="banner owl-carousel">
-            <div class="item"> <a href="#"><img src="image/banner/small-banner1-265x350.jpg" alt="small banner" class="img-responsive" /></a> </div>
-            <div class="item"> <a href="#"><img src="image/banner/small-banner-265x350.jpg" alt="small banner1" class="img-responsive" /></a> </div>
+            {{-- <div class="item"> <a href="#"><img src="image/banner/small-banner1-265x350.jpg" alt="small banner" class="img-responsive" /></a> </div> --}}
+            {{-- <div class="item"> <a href="#"><img src="image/banner/small-banner-265x350.jpg" alt="small banner1" class="img-responsive" /></a> </div> --}}
           </div>
         </aside>
         <!--Left Part End -->
@@ -208,20 +214,25 @@
               <div class="col-md-3 col-sm-3 text-right">
                 <select id="input-sort" class="form-control col-sm-11" onchange="sortby(this)">
                   <option data-href="{{route('cat.show',$current_cat->slug)}}">پیشفرض</option>
-                  <option value="newest" @if(request()->query('sortby') == 'newest') selected @endif data-href="{{ request()->fullUrlWithQuery(['sortby' => 'newest','page'=>1]) }}">جدیدترین</option>
-                  <option value="price-lth" @if(request()->query('sortby') == 'price-low-to-high') selected @endif data-href="{{ request()->fullUrlWithQuery(['sortby' => 'price-low-to-high','page'=>1]) }}">قیمت (کم به زیاد)</option>
-                  <option value="price-htl" @if(request()->query('sortby') == 'price-high-to-low') selected @endif data-href="{{ request()->fullUrlWithQuery(['sortby' => 'price-high-to-low','page'=>1]) }}">قیمت (زیاد به کم)</option>
+                  <option value="newest" @if($params['sortby'] == 'newest') selected @endif>جدیدترین</option>
+                  <option value="price-low-to-high" @if($params['sortby'] == 'price-low-to-high') selected @endif>قیمت (کم به زیاد)</option>
+                  <option value="price-high-to-low" @if($params['sortby'] == 'price-high-to-low') selected @endif >قیمت (زیاد به کم)</option>
                 </select>
               </div>
               <div class="col-sm-1 text-right">
                 <label class="control-label" for="input-limit">نمایش:</label>
               </div>
+              
               <div class="col-sm-2 text-right">
                 <select id="input-limit" class="form-control" onchange="showMax(this)">
-                  <option value="16" selected="selected">16</option>
-                  <option value="2" @if(request()->query('show') == 2) selected @endif data-href="{{ request()->fullUrlWithQuery(['show' => 2, 'page'=>1]) }}">2</option>
+                  <option value="16" @if($params['show'] == 16) selected @endif>16</option>
+                  <option value="2" @if($params['show'] == 2) selected @endif>2</option>
+                  <option value="3" @if($params['show'] == 3) selected @endif>3</option>
+                  <option value="24" @if($params['show'] == 24) selected @endif>24</option>
+
+                  {{-- <option value="2" @if(request()->query('show') == 2) selected @endif data-href="{{ request()->fullUrlWithQuery(['show' => 2, 'page'=>1]) }}">2</option>
                   <option value="3" @if(request()->query('show') == 3) selected @endif data-href="{{ request()->fullUrlWithQuery(['show' => 3, 'page'=>1]) }}">3</option>
-                  <option value="24" @if(request()->query('show') == 24) selected @endif data-href="{{ request()->fullUrlWithQuery(['show' => 24, 'page'=>1]) }}">24</option>
+                  <option value="24" @if(request()->query('show') == 24) selected @endif data-href="{{ request()->fullUrlWithQuery(['show' => 24, 'page'=>1]) }}">24</option> --}}
 
                 </select>
               </div>
@@ -234,10 +245,10 @@
 
             <div class="product-layout product-list col-xs-12">
                 <div class="product-thumb">
-                  <div class="image"><a href="#"><img width="220px" src="/images/products/{{$product->photos[0]->path}}" alt=" کتاب آموزش باغبانی " title=" کتاب آموزش باغبانی " class="img-responsive" /></a></div>
+                  <div class="image"><a href="{{$product->path()}}"><img width="220px" src="/images/products/{{$product->photos[0]->path}}" alt=" کتاب آموزش باغبانی " title=" کتاب آموزش باغبانی " class="img-responsive" /></a></div>
                   <div>
                     <div class="caption">
-                      <h4><a href="product.html">{{$product->title}}</a></h4>
+                      <h4><a href="{{$product->path()}}">{{$product->title}}</a></h4>
                       <p class="description"></p>
                       @if($product->discount > 0)
                       <p class="price"><span class="price-new">{{$product->price - $product->discount}} تومان</span> <span class="price-old">{{$product->price}} تومان</span> <span class="saving">{{floor(($product->discount)/$product->price * 100)}}%</span></p>     
@@ -268,7 +279,10 @@
 
               </ul>
             </div>
-            <div class="col-sm-12 text-right">نمایش 1 تا 12 از 15 (مجموع 2 صفحه)
+            <div class="col-sm-12 text-right">
+              
+
+              نمایش {{$products->firstItem()}} تا {{$products->lastItem()}} از {{count($products)}} (مجموع {{$products->lastPage()}} صفحه)
               
             </div>
           </div>
@@ -278,79 +292,31 @@
     </div>
   </div>
 
+
+  {{-- {{dd(request()->query())}} --}}
+
 @endsection
 
 @section('scripts')
 <script src="{{asset('js/app.js')}}"></script>
 
+
+
 <script>
-  
 
-
-
-  function sortby(tag){
-
-
-    let selectedId = tag.selectedIndex;
-    let sortVal = tag.children[selectedId].getAttribute('data-href');
-    console.log(sortVal);
-  
-    window.location.href = sortVal;
-  }
-  function showMax(tag){
-    let selectedId = tag.selectedIndex;
-    let showVal = tag.children[selectedId].getAttribute('data-href');
-    console.log(showVal);
-
-    window.location.href = showVal;
-  }
-
-  function arrayRemove(arr, value) { 
-    
-    return arr.filter(function(ele){ 
-        return ele != value; 
-    });
-  }
-
-  var attrBox = document.getElementById('attr-box');
- 
-  var checkedValues = [];
-
-  function attrFilter(tag,id){
-    
-  //   console.log(tag.checked);
-
-  //   if(checkedValues.includes(id)){
-  //     checkedValues = arrayRemove(checkedValues,id);
-  //   }else{
-  //     checkedValues.push(id);
-  //   }
-  //   console.log(checkedValues);
-
-
-  //   axios.post('/category/{{$current_cat->slug}}?{{request()->getQueryString()}}', {
-  //   attrs: checkedValues, 
-  // })
-  // .then(function (response) {
-  //   console.log(response);
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
-
-    // let selectedId = tag.selectedIndex;
-    // let attributeUrl = tag.children[selectedId].getAttribute('data-href');
-    
-    // console.log($queries);
-      let attributeUrl = tag.getAttribute('data-href');
-    // // console.log(attributeUrl);
-    window.location.href = attributeUrl;
-   
-  }
-
-
+  var queries = {@foreach($params['attributes_array'] as $key=>$row) '{{$key}}':[{{$row}}], @endforeach};
+  console.log(queries);
+  var sortBy = "{{$params['sortby']}}";
+  var showPerPage = "{{$params['show']}}";
+  var currentpage = "{{$params['page']}}";
+  var current_url = "{{request()->url()}}";
+  var q = '';
 
 </script>  
+
+ <script src="{{asset('js/cat-filter.js')}}"></script> 
+
+
 
 @endsection
 

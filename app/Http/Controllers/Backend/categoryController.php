@@ -70,7 +70,7 @@ class categoryController extends Controller
         
         $new_cat->attributegroups()->attach($request->input('attr-gps'));
 
-
+        cache()->pull('headerMenuCats');
 
         Session::flash('new_cat','دسته بندی جدید با موفقیت ایجاد شد');
         return redirect('admin/categories');
@@ -137,6 +137,8 @@ class categoryController extends Controller
         $cat->save();
         $cat->attributegroups()->sync($request->input('attr-gps'));
         
+        cache()->pull('headerMenuCats');
+
         Session::flash('edit_cat','دسته بندی  با موفقیت ویرایش شد');
         return redirect('admin/categories');
     }
@@ -157,6 +159,8 @@ class categoryController extends Controller
            }
         }
         $cat->delete();
+        cache()->pull('headerMenuCats');
+
         Session::flash('delete_cat','دسته بندی  با موفقیت حذف شد');
         return redirect('admin/categories');
     }

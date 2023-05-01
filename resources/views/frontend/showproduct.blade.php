@@ -73,26 +73,36 @@
                 </ul>
                 <div id="product">
                   <h3 class="subtitle">انتخاب های در دسترس</h3>
+
+                 
                   <div class="form-group required">
-                    <label class="control-label">رنگ</label>
-                    <select class="form-control" id="input-option200" name="option[200]">
+                    <label class="control-label"> سایز و رنگ</label>
+                    <select class="form-control" id="input-option200" name="option[200]" onchange="maxProduct()">
                       <option value=""> --- لطفا انتخاب کنید --- </option>
-                      <option value="4">مشکی </option>
-                      <option value="3">نقره ای </option>
-                      <option value="1">سبز </option>
-                      <option value="2">آبی </option>
+                      @foreach($product->stocks as $stock)
+                          <option data-count="{{$stock->count}}" value="{{$stock->id}}">رنگ: {{$stock->color->color}} - سایز: {{$stock->size->size}} {{$stock->size->description}} </option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="cart">
                     <div>
+
+                      @if(count($product->stocks)>0)
+
                       <div class="qty">
                         <label class="control-label" for="input-quantity">تعداد</label>
-                        <input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control" />
-                        <a class="qtyBtn plus" href="javascript:void(0);">+</a><br />
-                        <a class="qtyBtn mines" href="javascript:void(0);">-</a>
+                        <input type="number" max="8" min="1" name="quantity" value="1" size="2" id="input-quantity" class="form-control" />
+                        {{-- <a class="qtyBtn plus" href="javascript:void(0);">+</a><br />
+                        <a class="qtyBtn mines" href="javascript:void(0);">-</a> --}}
                         <div class="clear"></div>
                       </div>
-                      <button type="button" id="button-cart" class="btn btn-primary btn-lg">افزودن به سبد</button>
+                      <button type="button" id="button-cart" onClick="addtoCart()" class="btn btn-primary btn-lg">افزودن به سبد</button>
+                      
+                      @else
+                      <button type="button" id="buttoncart" class="btn btn-primary btn-lg">محصول در حال حاظر موجود نیست..</button>
+
+                      @endif
+                     
                     </div>
                     <div>
                       <button type="button" class="wishlist" onClick=""><i class="fa fa-heart"></i> افزودن به علاقه مندی ها</button>
@@ -108,7 +118,7 @@
                 <hr>
                 <!-- AddThis Button BEGIN -->
                 <div class="addthis_toolbox addthis_default_style"> <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a> <a class="addthis_button_tweet"></a> <a class="addthis_button_google_plusone" g:plusone:size="medium"></a> <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal" pi:pinit:url="http://www.addthis.com/features/pinterest" pi:pinit:media="http://www.addthis.com/cms-content/images/features/pinterest-lg.png"></a> <a class="addthis_counter addthis_pill_style"></a> </div>
-                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-514863386b357649"></script>
+                {{-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-514863386b357649"></script> --}}
                 <!-- AddThis Button END -->
               </div>
             </div>
@@ -253,7 +263,7 @@
                   @endif
                 </div>
                 <div class="button-group">
-                  <button class="btn-primary" type="button" onClick="addtoCart({{$relproduct->id}})"><span>افزودن به سبد</span></button>
+                  <button class="btn-primary" type="button" onClick="addtoCart()"><span>افزودن به سبد</span></button>
                   <div class="add-to-links">
                     <button type="button" data-toggle="tooltip" title="افزودن به علاقه مندی ها" onClick=""><i class="fa fa-heart"></i></button>
                     <button type="button" data-toggle="tooltip" title="مقایسه این محصول" onClick=""><i class="fa fa-exchange"></i></button>
@@ -335,6 +345,10 @@
 <script type="text/javascript" src="/front/js/swipebox/lib/ios-orientationchange-fix.js"></script>
 <script type="text/javascript" src="/front/js/swipebox/src/js/jquery.swipebox.min.js"></script>
 
+<script src="{{asset('js/app.js')}}"></script>
+
+<script type="text/javascript" src="/front/js/cart.js"></script>
+
 <script>
 // Elevate Zoom for Product Page image
 $("#zoom_01").elevateZoom({
@@ -355,6 +369,17 @@ $("#zoom_01").bind("click", function(e) {
 	$.swipebox(ez.getGalleryList());
   return false;
 });
+
+  function maxProduct(tag){
+    // console.log(tag.selectedIndex);
+    let x = document.getElementById("input-option200").options.selectedIndex;
+    var stock_max = document.getElementById("input-option200").children[x].getAttribute('data-count');
+    console.log(stock_max);
+    document.getElementById("input-quantity").value = 1;
+    document.getElementById("input-quantity").setAttribute('max',x);
+  }
+
+
 </script>
 
 @endsection

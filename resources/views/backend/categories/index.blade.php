@@ -102,17 +102,30 @@
                    
                    
                     <td class="align-middle text-center">
-                      <a href="{{route('categories.edit',$category->id)}}" class="btn btn-warning btn-sm">ویرایش</a>
+                      <div class="btn-group">
+                      <a href="{{route('categories.edit',$category->id)}}" class="btn btn-info btn-sm">ویرایش</a>
                       @if(count($category->childrenRecursive)>0)
                       <button type="button" class="btn btn-gray btn-sm disabled font11">غیر قابل حذف</button>
+                      </div>
                       @else
                       <form class="d-inline" action="{{route('categories.destroy',$category->id)}}" method="post">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" class="btn btn-warning btn-sm" value="حذف">
+                        <input type="submit" class="btn btn-danger btn-sm" value="حذف">
                       </form>
+                    </div>
                       @endif
                     </td>
+
+                    
+                   
+
+
+
+
+
+
+
                     </tr>
 
                     @if($category->childrenRecursive)

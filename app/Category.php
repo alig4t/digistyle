@@ -2,13 +2,14 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
     public $breads = [];
     public $subIds = [];
-
+    
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
@@ -36,13 +37,26 @@ class Category extends Model
 
     public function breadcrumb($category)
     {
+        
         array_push($this->breads, $category);
-
-        if ($category->parent) {
+        if ($category->parent_id != 0) {
             $this->breadcrumb($category->parent);
         }
         return array_reverse($this->breads);
+    }
 
+    public function scopeHeaderMenuCategories(){
+        
+        if(cache()->has('headerMenuCats')){
+            $parent_cats = cache('headerMenuCats');
+        }else{
+            $parent_cats = $this::with(['childrenRecursive'])
+            ->where('parent_id',0)
+            ->get();
+            cache(['headerMenuCats'=>$parent_cats], Carbon::now()->addMinutes(15));
+        }
+       
+        return $parent_cats;
     }
 
     public function getSubcategoriesIds($subCat)

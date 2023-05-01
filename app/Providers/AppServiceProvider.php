@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Brand;
+use App\Category;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +26,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+
+        view()->composer('frontend.layout.master', function ($view) {
+
+            $HeaderMenuCats = Category::HeaderMenuCategories();
+            $brands = Brand::HomePageBrands();
+
+            $view->with(['HeaderMenuCats' => $HeaderMenuCats, 'brands' => $brands]);
+        });
     }
 }
